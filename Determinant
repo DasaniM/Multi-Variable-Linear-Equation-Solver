@@ -1,0 +1,100 @@
+
+import java.io.*;
+/**
+ * This is a class that contains methods that solve a determinant. 
+ */
+public class Determinant{
+    
+    /**
+     *This method takes an array returns a subdivision of that array without including a particular index.
+     *@param double [] arr: The array which must be divided.
+     *@param int c: The index must not be included.
+     *@return double[]: a subdivision of the original array.
+     */
+    public static double[] arrayLine(double[]arr,int c){
+        double[]result = new double[arr.length-1];
+        boolean crossed = false;
+        for(int i = 0;i<result.length;i++){
+            if(i==c){
+                result[i] = arr[i+1];
+                crossed = true;
+            }
+            else{
+                if(crossed){
+                  result[i] = arr[i+1];  
+                }
+                else{
+                  result[i] = arr[i];
+                }
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * This is a method that created a sub 2D array, and is a helper method of the method determinant.
+     * @param double[][]det:  a 2D array.
+     * @param int col: an integer value indicating the position from which the array must be sub divided.
+     * @return double[][]: The method returns a portion of a given 2D array.
+     */
+    public static double[][] subdet(double[][]det,int col){
+        double [][] result = new double[det.length-1][det.length-1];
+        double [] sub = new double[result.length];
+        for(int i =0;i<result.length;i++){
+            for(int j = 0;j<result.length;j++){
+                sub = arrayLine(det[i+1],col);
+                result[i][j] = sub[j];
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * This method calculated the determinant of a given determinant.
+     * @param double[][]det: a 2D array containing the vslues of a given determinant.
+     * @return double: a double value indicating the value of the determinant of a given 2D array.
+     */
+    public static double determinant(double[][]det){
+        if(det.length == 2){
+            return ((det[0][0]*det[1][1])-(det[0][1]*det[1][0]));
+        }
+        else{
+            double result = 0;
+            for(int j = 0;j<det.length;j++){
+                if(j%2 == 0){
+                   result = result+det[0][j]*determinant(subdet(det,j));
+                }
+                else{
+                   result = result-det[0][j]*determinant(subdet(det,j));
+                }
+                Equation.printtest(subdet(det,j));
+                System.out.println("");
+            }
+            return result;
+        }
+    }
+    
+    /**
+     * A method to test code
+     * @return:void
+     */
+    public static void test()throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter determinant length");
+        int a = Integer.parseInt(br.readLine());
+        double [][] arr = new double [a][a];
+        for(int i = 0;i<a;i++){
+            System.out.println("enter elements of row with spaces in between");
+            String s = br.readLine();
+            String[]st = s.split(" ");
+            for(int j = 0;j<st.length;j++){
+                arr[i][j] = Double.parseDouble(st[j]);
+            }
+        }
+        Equation.printtest(arr);
+        System.out.println();
+        double det = determinant(arr);
+        System.out.println(det+"");
+    }
+}
+
