@@ -1,0 +1,123 @@
+import java.io.*;
+/**
+ * This project is a formula solver. The aim of the project is to solve a set of multi-variable equations given sufficient informations. 
+ * This is achieved by using the concept of determinants to solve simultaneous equations. 
+ * The project is generic and can solve equations irrespective of how many variables there are.
+ */
+/**
+ * This class has the methods that are required to solve equations with any number of variables 
+ * given all the equations.
+ */
+class Equation{
+    /**
+     * This is the main method that provides the user interface.
+     */
+     public static void main(String[] args)throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter number of variables:");
+        int a = Integer.parseInt(br.readLine());
+        double [][] coeff = new double [a][a];
+        double [] vals = new double[a];
+        System.out.println("Please enter the co-efficients of the variables.");
+        System.out.println("");
+        System.out.println("Eg:if your equations are 2x+3y = 4, and 3x+2y = 6 enter 2 and 3, then 3 and 2 when you are asked");
+        System.out.println("");
+        for(int i = 0;i<a;i++){
+            System.out.println("Please enter the co-efficients:");
+            System.out.println("");
+            String s = br.readLine();
+            System.out.println("");
+            String[]st = s.split(" ");
+            for(int j = 0;j<st.length;j++){
+                coeff[i][j] = Double.parseDouble(st[j]);
+            }
+        }
+        System.out.println("Now enter the resultant value:");
+        System.out.println("");
+        System.out.println("Eg:if your equations are 2x+3y = 4, and 3x+2y = 6 enter 4 then 6 when you are asked.");
+        System.out.println("");
+        for(int k = 0;k<a;k++){
+            System.out.println("Please enter the resultant value:");
+            System.out.println("");
+            String s2 = br.readLine();
+            System.out.println("");
+            vals[k] = Double.parseDouble(s2);
+        }
+        if(!checkPos(coeff)){
+            System.out.println("Solution is not possible");
+        }
+        else{
+            double[]result = new double[a];
+            double[][]temp = new double[a][a];
+            double[][]tempo = coeff;
+            double det = Determinant.determinant(coeff);
+            printtest(tempo);
+            System.out.println(""+det);
+            for(int i = 0;i<coeff.length;i++){
+                temp = replaceCol(coeff,vals,i);
+                printtest(temp);
+                result[i] = Determinant.determinant(temp)/det;
+            }
+            printResult(result);
+        }
+    }
+    
+    /**
+     * This method checks if the given set of equations are solvable or not.
+     * @param double[][]det: A 2D array which contains the determinant array.
+     * @return boolean: if the determinant value is 0 it returns false else return false.
+     */
+    public static boolean checkPos(double[][]det){
+        if(Determinant.determinant(det)==0)return false;
+        return true;
+    }
+    
+    /**
+     *Prints a given 2D array.
+     *@ param double[][]det: A 2D array.
+     *@ return: void
+     */
+    public static void printtest(double[][]det){
+        for(int i = 0;i<det.length;i++){
+            for(int j = 0;j<det.length;j++){
+                System.out.print(det[i][j]+" ");
+            }
+            System.out.println("");
+        }
+    }
+    
+    /**
+     * replaces a column of a particular 2D array with a given array
+     * @param double[][] det: a 2D array
+     * @param double[] vals: the array that is to replace a particular column.
+     * @param int col: an integer value indicating which column must be replaced
+     * @return double[][]: this method returns a 2D array after the column is replaced.
+     */
+    public static double[][] replaceCol(double[][]det,double[] vals,int col){
+        double[][] result = new double[det.length][det.length];
+        for(int i = 0;i<det.length;i++){
+            for(int j = 0;j<det.length;j++){
+               if(j == col){
+                   result[i][j] = vals[i];
+               }
+               else{
+                   result[i][j] = det[i][j];
+               }
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * This is a method that prints the result that are calculated by the computer.
+     * @param result:An array containing all the results.
+     * @return:void
+     */
+    public static void printResult(double[] result){
+        for(int i = 65;i<65+result.length;i++){
+            System.out.println(""+((char)i)+" = "+""+result[i-65]);
+            System.out.println("");
+        }
+    }
+}
+
