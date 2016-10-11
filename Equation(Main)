@@ -65,7 +65,7 @@ class Equation{
     /**
      * This method checks if the given set of equations are solvable or not.
      * @param double[][]det: A 2D array which contains the determinant array.
-     * @return boolean: if the determinant value is 0 it returns false else return false.
+     * @return boolean: if the determinant value is 0 it returns false else return true.
      */
     public static boolean checkPos(double[][]det){
         if(Determinant.determinant(det)==0)return false;
